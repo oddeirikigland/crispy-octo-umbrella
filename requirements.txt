@@ -1,0 +1,5 @@
+dotenv
+djangorestframework
+django
+gunicorn
+psycopg2
