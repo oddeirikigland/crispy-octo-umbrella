@@ -210,3 +210,5 @@ dmypy.json
 
 .idea
 .env
+
+/venv
