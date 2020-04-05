@@ -25,11 +25,11 @@ def load_admins_file():
 
 
 def load_twilio_config():
-    logger.debug('Loading Twilio configuration')
+    logger.debug("Loading Twilio configuration")
 
-    twilio_account_sid = os.getenv('TWILIO_ACCOUNT_SID')
-    twilio_auth_token = os.getenv('TWILIO_AUTH_TOKEN')
-    twilio_number = os.getenv('TWILIO_NUMBER')
+    twilio_account_sid = os.getenv("TWILIO_ACCOUNT_SID")
+    twilio_auth_token = os.getenv("TWILIO_AUTH_TOKEN")
+    twilio_number = os.getenv("TWILIO_NUMBER")
 
     if not all([twilio_account_sid, twilio_auth_token, twilio_number]):
         raise ImproperlyConfigured(NOT_CONFIGURED_MESSAGE)
@@ -39,18 +39,14 @@ def load_twilio_config():
 
 class MessageClient:
     def __init__(self):
-        logger.debug('Initializing messaging client')
+        logger.debug("Initializing messaging client")
 
-        (
-            twilio_number,
-            twilio_account_sid,
-            twilio_auth_token,
-        ) = load_twilio_config()
+        (twilio_number, twilio_account_sid, twilio_auth_token,) = load_twilio_config()
 
         self.twilio_number = twilio_number
         self.twilio_client = Client(twilio_account_sid, twilio_auth_token)
 
-        logger.debug('Twilio client initialized')
+        logger.debug("Twilio client initialized")
 
     def send_message(self, body, to):
         self.twilio_client.messages.create(
@@ -63,16 +59,16 @@ class MessageClient:
 
 class TwilioNotificationsMiddleware:
     def __init__(self):
-        logger.debug('Initializing Twilio notifications middleware')
+        logger.debug("Initializing Twilio notifications middleware")
 
         self.contacts = load_admins_file()
         self.client = MessageClient()
 
-        logger.debug('Twilio notifications middleware initialized')
+        logger.debug("Twilio notifications middleware initialized")
 
     def process_message(self, message):
         for contact in self.contacts:
             message_to_send = message.format(contact.name)
             self.client.send_message(message_to_send, contact.phone_number)
-        logger.info('Administrators notified!')
+        logger.info("Administrators notified!")
         return None

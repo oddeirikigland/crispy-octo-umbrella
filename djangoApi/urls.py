@@ -29,9 +29,6 @@ router.register(r"faces", FaceViewSet)
 router.register(r"sms", PhoneBookViewSet)
 
 
-
-
-
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include(router.urls)),
