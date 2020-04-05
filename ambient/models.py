@@ -17,4 +17,3 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 class Face(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     description = models.TextField()
-
