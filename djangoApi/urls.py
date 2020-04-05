@@ -19,12 +19,18 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework import routers
 
-from ambient import views
+from ambient.views import UserViewSet, GroupViewSet, FaceViewSet
+from smsService.views import PhoneBookViewSet
 
 router = routers.DefaultRouter()
-router.register(r"users", views.UserViewSet)
-router.register(r"groups", views.GroupViewSet)
-router.register(r"faces", views.FaceViewSet)
+router.register(r"users", UserViewSet)
+router.register(r"groups", GroupViewSet)
+router.register(r"faces", FaceViewSet)
+router.register(r"sms", PhoneBookViewSet)
+
+
+
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),

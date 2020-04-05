@@ -6,16 +6,11 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 from twilio.rest import Client
+from .models import PhoneBook
+from .serializers import PhoneBookSerializer
 
 logger = logging.getLogger(__name__)
 
-dotenv_path = settings.PROJECT_PATH / '.env'
-logger.debug(f'Reading .env file at: {dotenv_path}')
-load_dotenv(dotenv_path=dotenv_path)
-
-
-MESSAGE = """[This is a test] ALERT! It appears the server is having issues.
-Exception: {0}"""
 
 NOT_CONFIGURED_MESSAGE = (
     "Required enviroment variables "
@@ -24,9 +19,9 @@ NOT_CONFIGURED_MESSAGE = (
 
 
 def load_admins_file():
-    admins_json_path = settings.PROJECT_PATH / 'config' / 'administrators.json'
-    logger.debug(f'Loading administrators info from: {admins_json_path}')
-    return json.loads(admins_json_path.read_text())
+    queryset = PhoneBook.objects.all()
+    serializer_class = PhoneBookSerializer
+    return queryset
 
 
 def load_twilio_config():
@@ -67,23 +62,17 @@ class MessageClient:
 
 
 class TwilioNotificationsMiddleware:
-    def __init__(self, get_response):
+    def __init__(self):
         logger.debug('Initializing Twilio notifications middleware')
 
-        self.administrators = load_admins_file()
+        self.contacts = load_admins_file()
         self.client = MessageClient()
-        self.get_response = get_response
 
         logger.debug('Twilio notifications middleware initialized')
 
-    def __call__(self, request):
-        return self.get_response(request)
-
-    def process_exception(self, request, exception):
-        message_to_send = MESSAGE.format(exception)
-
-        for admin in self.administrators:
-            self.client.send_message(message_to_send, admin['phone_number'])
-
+    def process_message(self, message):
+        for contact in self.contacts:
+            message_to_send = message.format(contact.name)
+            self.client.send_message(message_to_send, contact.phone_number)
         logger.info('Administrators notified!')
         return None
