@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 # Create your views here.
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -12,6 +12,7 @@ from .middleware import TwilioNotificationsMiddleware
 class PhoneBookViewSet(viewsets.ModelViewSet):
     queryset = PhoneBook.objects.all()
     serializer_class = PhoneBookSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     @action(detail=False, url_path="dinner")
     def send_dinner_sms(self, request, pk=None):
