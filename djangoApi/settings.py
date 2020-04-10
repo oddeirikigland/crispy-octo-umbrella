@@ -42,6 +42,7 @@ if not DEBUG:
 INSTALLED_APPS = [
     "ambient.apps.AmbientConfig",
     "smsService.apps.SmsserviceConfig",
+    "notes.apps.NotesConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
