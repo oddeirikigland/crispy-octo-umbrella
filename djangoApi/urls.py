@@ -21,12 +21,14 @@ from rest_framework import routers
 
 from ambient.views import UserViewSet, GroupViewSet, FaceViewSet
 from smsService.views import PhoneBookViewSet
+from notes.views import NotesViewSet
 
 router = routers.DefaultRouter()
 router.register(r"users", UserViewSet)
 router.register(r"groups", GroupViewSet)
 router.register(r"faces", FaceViewSet)
 router.register(r"sms", PhoneBookViewSet)
+router.register(r"notes", NotesViewSet)
 
 
 urlpatterns = [
