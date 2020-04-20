@@ -13,7 +13,6 @@ from .middleware import TwilioNotificationsMiddleware
 class PhoneBookViewSet(viewsets.ModelViewSet):
     queryset = PhoneBook.objects.all()
     serializer_class = PhoneBookSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
     @action(detail=False, url_path="dinner")
     def send_dinner_sms(self, request, pk=None):
